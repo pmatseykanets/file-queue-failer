@@ -1,0 +1,19 @@
+{
+    "name": "pmatseykanets/file-queue-failer",
+    "description": "File based implementation of Laravel Queue Failer",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Peter Matseykanets"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.9",
+        "illuminate/support": "~5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Pvm\\FileQueueFailer\\": "src/"
+        }
+    }
+}

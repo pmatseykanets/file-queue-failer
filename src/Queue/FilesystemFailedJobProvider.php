@@ -22,7 +22,7 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
             throw new \RuntimeException("Path '$path' doesn't exist.");
         }
 
-        $this->path = realpath($path); var_dump($this->path);
+        $this->path = realpath($path);
 
     }
 
@@ -119,9 +119,9 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
      */
     protected function traverseStorage(\Closure $callable)
     {
-        foreach ($this->filesystem->directories($this->path) as $connection) { var_dump($connection);
-            foreach ($this->filesystem->directories($connection) as $queue) { var_dump($queue);
-                foreach ($this->filesystem->files($queue) as $job) { var_dump($job);
+        foreach ($this->filesystem->directories($this->path) as $connection) {
+            foreach ($this->filesystem->directories($connection) as $queue) {
+                foreach ($this->filesystem->files($queue) as $job) {
                     if (! $callable($job, $connection, $queue)) {
                         return;
                     }

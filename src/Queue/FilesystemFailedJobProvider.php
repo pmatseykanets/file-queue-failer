@@ -2,23 +2,17 @@
 
 namespace Pvm\FileQueueFailer\Queue;
 
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Queue\Failed\FailedJobProviderInterface;
 
 class FilesystemFailedJobProvider implements FailedJobProviderInterface
 {
-    /** @var  Filesystem */
-    protected $filesystem;
-
     protected $path;
 
     protected $sequenseFile = 'failed.seq';
 
-    public function __construct($path, Filesystem $filesystem)
+    public function __construct($path)
     {
-        $this->filesystem = $filesystem;
-
-        if (! $this->filesystem->exists($path)) {
+        if (! file_exists($path)) {
             throw new \RuntimeException("Path '$path' doesn't exist.");
         }
 
@@ -42,7 +36,7 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
 
         $filename = $this->getNewId() . '_' . date('YmdHis');
 
-        $this->filesystem->put("$path\/$filename", $payload);
+        file_put_contents("$path\/$filename", $payload);
     }
 
     /**
@@ -74,7 +68,7 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
      */
     public function forget($id)
     {
-        $this->deleteJob((int) $id);
+        return $this->deleteJob((int) $id);
     }
 
     /**
@@ -119,9 +113,9 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
      */
     protected function traverseStorage(\Closure $callable)
     {
-        foreach ($this->filesystem->directories($this->path) as $connection) {
-            foreach ($this->filesystem->directories($connection) as $queue) {
-                foreach ($this->filesystem->files($queue) as $job) {
+        foreach ($this->directories($this->path) as $connection) {
+            foreach ($this->directories($connection) as $queue) {
+                foreach ($this->files($queue) as $job) {
                     if (! $callable($job, $connection, $queue)) {
                         return;
                     }
@@ -185,7 +179,7 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
             list($id, $ts) = explode('_', basename($filename));
 
             if ($jobId == (int) $id) {
-                $success = $this->filesystem->delete($filename);
+                $success = @unlink($filename);
                 return false;
             }
 
@@ -201,7 +195,7 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
     protected function deleteAllJobs()
     {
         $this->traverseStorage(function($filename, $connection, $queue) {
-            $this->filesystem->delete($filename);
+            @unlink($filename);
             return true;
         });
     }
@@ -234,8 +228,34 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
      */
     protected function makePath($path)
     {
-        if (! $this->filesystem->exists($path)) {
-            $this->filesystem->makeDirectory($path, 0777, true);
+        if (! file_exists($path)) {
+            @mkdir($path, 0777, true);
         }
+    }
+
+    protected function files($path)
+    {
+        $files = [];
+
+        foreach (new \DirectoryIterator($path) as $fileInfo) {
+            if ($fileInfo->isFile() && preg_match('/^\d{1,}_\d{14}$/', $fileInfo->getBasename())) {
+                $files[] = $fileInfo->getRealPath();
+            }
+        }
+
+        return $files;
+    }
+
+    protected function directories($path)
+    {
+        $directories = [];
+
+        foreach (new \DirectoryIterator($path) as $fileInfo) {
+            if ($fileInfo->isDir() && ! $fileInfo->isDot()) {
+                $directories[] = $fileInfo->getRealPath();
+            }
+        }
+
+        return $directories;
     }
 }

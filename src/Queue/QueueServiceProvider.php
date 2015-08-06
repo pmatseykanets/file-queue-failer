@@ -20,8 +20,7 @@ class QueueServiceProvider extends OriginalQueueServiceProvider
             $config = $app['config']['queue.failed'];
 
             return new FilesystemFailedJobProvider(
-                isset($config['path']) ? $config['path'] : storage_path('failed_jobs'),
-                $app['files']
+                isset($config['path']) ? $config['path'] : storage_path('failed_jobs')
             );
         });
     }

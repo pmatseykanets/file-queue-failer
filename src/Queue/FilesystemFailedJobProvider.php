@@ -36,7 +36,7 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
 
         $filename = $this->getNewId() . '_' . date('YmdHis');
 
-        file_put_contents("$path\/$filename", $payload);
+        file_put_contents("$path/$filename", $payload);
     }
 
     /**
@@ -102,7 +102,7 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
      */
     private function getSequenceFilename()
     {
-        return "$this->path\/$this->sequenseFile";
+        return "$this->path/$this->sequenseFile";
     }
 
     /**
@@ -134,11 +134,14 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
         $all = [];
 
         $this->traverseStorage(function($job, $connection, $queue) use (&$all) {
-            $all[] = $this->getJobFromFile($job, $connection, $queue);
+            $job = $this->getJobFromFile($job, $connection, $queue);
+            $all[$job['id']] = $job;
             return true;
         });
 
-        return $all;
+        ksort($all);
+
+        return array_values($all);
     }
 
     /**

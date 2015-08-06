@@ -5,7 +5,7 @@
 ### Install through composer
 
 ```bash
-$ composer require pmatseykanets/file-queue-failer
+$ composer require pmatseykanets/file-queue-failer dev-master
 ```
 
 ### Register the service provider

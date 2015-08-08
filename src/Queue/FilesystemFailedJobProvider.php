@@ -12,20 +12,20 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
 
     public function __construct($path)
     {
-        if (! file_exists($path)) {
+        if (!file_exists($path)) {
             throw new \RuntimeException("Path '$path' doesn't exist.");
         }
 
         $this->path = realpath($path);
-
     }
 
     /**
      * Log a failed job into storage.
      *
-     * @param  string $connection
-     * @param  string $queue
-     * @param  string $payload
+     * @param string $connection
+     * @param string $queue
+     * @param string $payload
+     *
      * @return void
      */
     public function log($connection, $queue, $payload)
@@ -34,7 +34,7 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
 
         $this->makePath($path);
 
-        $filename = $this->getNewId() . '_' . date('YmdHis');
+        $filename = $this->getNewId().'_'.date('YmdHis');
 
         file_put_contents("$path/$filename", $payload);
     }
@@ -52,7 +52,8 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
     /**
      * Get a single failed job.
      *
-     * @param  mixed $id
+     * @param mixed $id
+     *
      * @return array
      */
     public function find($id)
@@ -63,7 +64,8 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
     /**
      * Delete a single failed job from storage.
      *
-     * @param  mixed $id
+     * @param mixed $id
+     *
      * @return bool
      */
     public function forget($id)
@@ -82,7 +84,7 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
     }
 
     /**
-     * Returns a new id
+     * Returns a new id.
      *
      * @return int
      */
@@ -96,7 +98,7 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
     }
 
     /**
-     * Returns the absolute path to the sequence file
+     * Returns the absolute path to the sequence file.
      *
      * @return string
      */
@@ -107,7 +109,7 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
 
     /**
      * Traverses failed jobs storage and execute a callable
-     * for each entry (file)
+     * for each entry (file).
      *
      * @param \Closure $callable
      */
@@ -116,7 +118,7 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
         foreach ($this->directories($this->path) as $connection) {
             foreach ($this->directories($connection) as $queue) {
                 foreach ($this->files($queue) as $job) {
-                    if (! $callable($job, $connection, $queue)) {
+                    if (!$callable($job, $connection, $queue)) {
                         return;
                     }
                 }
@@ -125,7 +127,7 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
     }
 
     /**
-     * Returns all failed jobs
+     * Returns all failed jobs.
      *
      * @return array
      */
@@ -133,9 +135,10 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
     {
         $all = [];
 
-        $this->traverseStorage(function($job, $connection, $queue) use (&$all) {
+        $this->traverseStorage(function ($job, $connection, $queue) use (&$all) {
             $job = $this->getJobFromFile($job, $connection, $queue);
             $all[$job['id']] = $job;
+
             return true;
         });
 
@@ -145,20 +148,22 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
     }
 
     /**
-     * Returns a failed job given the id
+     * Returns a failed job given the id.
      *
      * @param $jobId
+     *
      * @return null
      */
     protected function getJob($jobId)
     {
         $job = null;
 
-        $this->traverseStorage(function($filename, $connection, $queue) use ($jobId, &$job) {
+        $this->traverseStorage(function ($filename, $connection, $queue) use ($jobId, &$job) {
             list($id, $ts) = explode('_', basename($filename));
 
             if ($jobId == (int) $id) {
                 $job = $this->getJobFromFile($filename, $connection, $queue);
+
                 return false;
             }
 
@@ -169,20 +174,22 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
     }
 
     /**
-     * Delete a failed job given the id
+     * Delete a failed job given the id.
      *
      * @param $jobId
+     *
      * @return bool
      */
     protected function deleteJob($jobId)
     {
         $success = false;
 
-        $this->traverseStorage(function($filename, $connection, $queue) use ($jobId, &$success) {
+        $this->traverseStorage(function ($filename, $connection, $queue) use ($jobId, &$success) {
             list($id, $ts) = explode('_', basename($filename));
 
             if ($jobId == (int) $id) {
                 $success = @unlink($filename);
+
                 return false;
             }
 
@@ -193,22 +200,24 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
     }
 
     /**
-     * Delete all failed jobs
+     * Delete all failed jobs.
      */
     protected function deleteAllJobs()
     {
-        $this->traverseStorage(function($filename, $connection, $queue) {
+        $this->traverseStorage(function ($filename, $connection, $queue) {
             @unlink($filename);
+
             return true;
         });
     }
 
     /**
-     * Retrieve a failed job from the file
+     * Retrieve a failed job from the file.
      *
      * @param $filename
      * @param $connection
      * @param $queue
+     *
      * @return array
      */
     protected function getJobFromFile($filename, $connection, $queue)
@@ -216,22 +225,22 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
         list($id, $ts) = explode('_', basename($filename));
 
         return [
-            'id' => (int)$id,
+            'id'         => (int) $id,
             'connection' => basename($connection),
-            'queue' => basename($queue),
-            'payload' => file_get_contents($filename),
-            'failed_at' => \DateTime::createFromFormat('YmdHis', $ts)->format('Y-m-d H:i:s'),
+            'queue'      => basename($queue),
+            'payload'    => file_get_contents($filename),
+            'failed_at'  => \DateTime::createFromFormat('YmdHis', $ts)->format('Y-m-d H:i:s'),
         ];
     }
 
     /**
-     * Create a path if it doesn't exist
+     * Create a path if it doesn't exist.
      *
      * @param $path
      */
     protected function makePath($path)
     {
-        if (! file_exists($path)) {
+        if (!file_exists($path)) {
             @mkdir($path, 0777, true);
         }
     }
@@ -254,7 +263,7 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
         $directories = [];
 
         foreach (new \DirectoryIterator($path) as $fileInfo) {
-            if ($fileInfo->isDir() && ! $fileInfo->isDot()) {
+            if ($fileInfo->isDir() && !$fileInfo->isDot()) {
                 $directories[] = $fileInfo->getRealPath();
             }
         }

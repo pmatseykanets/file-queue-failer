@@ -104,8 +104,8 @@ class FilesystemFailedJobProviderTest extends TestCase
     {
         $jobs = $this->populateStorage();
 
-        $file = $this->buildFilePathFromJob($jobs[0]) . 'ext';
-        $file = dirname($file) . '/prefix' . basename($file) . 'ext';
+        $file = $this->buildFilePathFromJob($jobs[0]).'ext';
+        $file = dirname($file).'/prefix'.basename($file).'ext';
         file_put_contents($file, 'data');
 
         $provider = $this->getProvider();
@@ -131,19 +131,19 @@ class FilesystemFailedJobProviderTest extends TestCase
     {
         $jobs = [
             [
-                'id' => 1,
+                'id'         => 1,
                 'connection' => 'foo',
-                'queue' => 'bar',
-                'payload' => json_encode(['job' => 'job1', 'data' => ['data1']]),
-                'failed_at' => '2015-08-01 12:30:00'
+                'queue'      => 'bar',
+                'payload'    => json_encode(['job' => 'job1', 'data' => ['data1']]),
+                'failed_at'  => '2015-08-01 12:30:00',
             ],
             [
-                'id' => 2,
+                'id'         => 2,
                 'connection' => 'baz',
-                'queue' => 'qux',
-                'payload' => json_encode(['job' => 'job2', 'data' => ['data2']]),
-                'failed_at' => '2015-08-02 22:55:00'
-            ]
+                'queue'      => 'qux',
+                'payload'    => json_encode(['job' => 'job2', 'data' => ['data2']]),
+                'failed_at'  => '2015-08-02 22:55:00',
+            ],
         ];
 
         foreach ($jobs as $job) {
@@ -168,7 +168,7 @@ class FilesystemFailedJobProviderTest extends TestCase
     private function buildFilePathFromJob($job)
     {
         $path = "$this->path/{$job['connection']}/{$job['queue']}";
-        $basename = $job['id']. '_' . \DateTime::createFromFormat('Y-m-d H:i:s', $job['failed_at'])->format('YmdHis');
+        $basename = $job['id'].'_'.\DateTime::createFromFormat('Y-m-d H:i:s', $job['failed_at'])->format('YmdHis');
 
         return "$path/$basename";
     }

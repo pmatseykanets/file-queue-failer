@@ -2,7 +2,6 @@
 
 namespace Pvm\FileQueueFailer\Queue;
 
-use Pvm\FileQueueFailer\Queue\FilesystemFailedJobProvider;
 use Illuminate\Queue\QueueServiceProvider as OriginalQueueServiceProvider;
 
 class QueueServiceProvider extends OriginalQueueServiceProvider

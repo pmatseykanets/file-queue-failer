@@ -14,15 +14,14 @@ class FilesystemFailedJobProviderTest extends TestCase
 
         $this->path = __DIR__.'/tmp';
 
-        @mkdir($this->path);
+        $this->createStorage();
     }
 
     public function tearDown()
     {
         parent::tearDown();
 
-        @unlink("$this->path/failed.seq");
-        @rmdir($this->path);
+        $this->removeStorage();
     }
 
     public function testCreateProvier()
@@ -37,6 +36,8 @@ class FilesystemFailedJobProviderTest extends TestCase
 
         $timeStamp = date('YmdHis');
         $provider->log('foo', 'bar', json_encode(['job' => 'baz', 'data' => ['data']]));
+
+        $this->assertStringEqualsFile("$this->path/failed.seq", '1');
 
         $file = "$this->path/foo/bar/1_$timeStamp";
         $this->assertFileExists($file);
@@ -150,6 +151,8 @@ class FilesystemFailedJobProviderTest extends TestCase
             $this->createJob($job);
         }
 
+        file_put_contents("$this->path/failed.seq", '2');
+
         return $jobs;
     }
 
@@ -184,5 +187,16 @@ class FilesystemFailedJobProviderTest extends TestCase
     {
         $file = $this->buildFilePathFromJob($job);
         @unlink($file);
+    }
+
+    private function createStorage()
+    {
+        @mkdir($this->path);
+    }
+
+    private function removeStorage()
+    {
+        @unlink("$this->path/failed.seq");
+        @rmdir($this->path);
     }
 }

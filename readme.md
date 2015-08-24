@@ -2,6 +2,7 @@
 
 [![StyleCI](https://styleci.io/repos/40268759/shield)](https://styleci.io/repos/40268759)
 [![Build Status](https://travis-ci.org/pmatseykanets/file-queue-failer.svg)](https://travis-ci.org/pmatseykanets/file-queue-failer)
+[![Latest Stable Version](https://poser.pugx.org/pmatseykanets/file-queue-failer/v/stable)](https://packagist.org/packages/pmatseykanets/file-queue-failer)
 [![Latest Unstable Version](https://poser.pugx.org/pmatseykanets/file-queue-failer/v/unstable)](https://packagist.org/packages/pmatseykanets/file-queue-failer)
 [![License](https://poser.pugx.org/pmatseykanets/file-queue-failer/license)](https://packagist.org/packages/pmatseykanets/file-queue-failer)
 

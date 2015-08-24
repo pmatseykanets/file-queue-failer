@@ -1,6 +1,7 @@
 {
     "name": "pmatseykanets/file-queue-failer",
     "description": "File based implementation of Laravel Queue Failer",
+    "keywords": ["laravel", "lumen", "queue", "failer", "failed", "job"],
     "license": "MIT",
     "authors": [
         {
@@ -23,5 +24,6 @@
         "psr-4": {
             "Pvm\\FileQueueFailer\\": "tests/"
         }
-    }
+    },
+    "minimum-stability": "dev"
 }

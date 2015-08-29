@@ -13,7 +13,7 @@ If you use job queues in your [Laravel](http://laravel.com) or [Lumen](http://lu
 ### Install through composer
 
 ```bash
-$ composer require pmatseykanets/file-queue-failer dev-master
+$ composer require pmatseykanets/file-queue-failer
 ```
 
 ### Register the service provider

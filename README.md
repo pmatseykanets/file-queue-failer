@@ -44,13 +44,13 @@ If you're using Laravel < 5.5 or if you have package auto-discovery turned off y
 ],
 ```
 
-Laravel 5.0 to 5.2
+Laravel 5.0 - 5.2
 
 ```bash
 $ composer require pmatseykanets/file-queue-failer:0.1.0
 ```
 
-Substitute original `QueueServiceProvider` implementation in `config\app.php`  
+Swap the original `QueueServiceProvider` implementation in `config\app.php`  
 
 ```php
 // config/app.php

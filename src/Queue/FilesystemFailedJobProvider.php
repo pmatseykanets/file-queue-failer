@@ -20,10 +20,11 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
     /**
      * Log a failed job into storage.
      *
-     * @param string $connection
-     * @param string $queue
-     * @param string $payload
-     * @param  \Exception  $exception
+     * @param string     $connection
+     * @param string     $queue
+     * @param string     $payload
+     * @param \Exception $exception
+     *
      * @return int|null
      */
     public function log($connection, $queue, $payload, $exception)

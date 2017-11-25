@@ -2,19 +2,16 @@
 
 namespace Pvm\FileQueueFailer\Queue;
 
-use Illuminate\Queue\QueueServiceProvider as OriginalQueueServiceProvider;
+use Illuminate\Support\ServiceProvider;
 
-class QueueServiceProvider extends OriginalQueueServiceProvider
+class QueueServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
     public function boot()
     {
-        parent::boot();
+        // Get a default implementation to trigger a deferred binding
+        $_ = $this->app['queue.failer'];
 
+        // Swap the implementation
         $this->app->singleton('queue.failer', function ($app) {
             $config = $app['config']['queue.failed'];
 

@@ -121,7 +121,7 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
         foreach ($this->directories($this->path) as $connection) {
             foreach ($this->directories($connection) as $queue) {
                 foreach ($this->files($queue) as $job) {
-                    if (!$callable($job, $connection, $queue)) {
+                    if (! $callable($job, $connection, $queue)) {
                         return;
                     }
                 }
@@ -243,7 +243,7 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
      */
     protected function makePath($path)
     {
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             @mkdir($path, 0777, true);
         }
     }
@@ -266,7 +266,7 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
         $directories = [];
 
         foreach (new \DirectoryIterator($path) as $fileInfo) {
-            if ($fileInfo->isDir() && !$fileInfo->isDot()) {
+            if ($fileInfo->isDir() && ! $fileInfo->isDot()) {
                 $directories[] = $fileInfo->getRealPath();
             }
         }

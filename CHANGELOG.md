@@ -2,12 +2,16 @@
 
 ## [Unreleased]
 
-## [1.0.0](https://github.com/pmatseykanets/file-queue-failer/releases/tag/v1.0.0) - 2017-11-24
+## [1.0.0](https://github.com/pmatseykanets/file-queue-failer/releases/tag/v1.0.0) - 2017-11-25
+
+### Added
+
+- Added package auto discovery
 
 ### Changed
 
 - Match the changes in `FailedJobProviderInterface` interface
-
+- Service provider swaps the failer implementation on the fly
 
 ## [0.1.0](https://github.com/pmatseykanets/file-queue-failer/releases/tag/v0.1.0) - 2015-08-09
 

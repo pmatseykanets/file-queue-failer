@@ -24,7 +24,7 @@ class FilesystemFailedJobProviderTest extends TestCase
         $this->removeStorage();
     }
 
-    public function testCreateProvier()
+    public function testCreateProvider()
     {
         $provider = $this->getProvider();
         $this->assertInstanceOf(FilesystemFailedJobProvider::class, $provider);
@@ -35,7 +35,7 @@ class FilesystemFailedJobProviderTest extends TestCase
         $provider = $this->getProvider();
 
         $timeStamp = date('YmdHis');
-        $provider->log('foo', 'bar', json_encode(['job' => 'baz', 'data' => ['data']]));
+        $provider->log('foo', 'bar', json_encode(['job' => 'baz', 'data' => ['data']]), new \Exception('Foo'));
 
         $this->assertStringEqualsFile("$this->path/failed.seq", '1');
 

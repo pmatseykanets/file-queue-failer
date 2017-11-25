@@ -8,13 +8,11 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
 {
     protected $path;
 
-    protected $sequenseFile = 'failed.seq';
+    protected $sequence = 'failed.seq';
 
     public function __construct($path)
     {
-        if (!file_exists($path)) {
-            throw new \RuntimeException("Path '$path' doesn't exist.");
-        }
+        $this->makePath($path);
 
         $this->path = realpath($path);
     }
@@ -25,18 +23,22 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
      * @param string $connection
      * @param string $queue
      * @param string $payload
-     *
-     * @return void
+     * @param  \Exception  $exception
+     * @return int|null
      */
-    public function log($connection, $queue, $payload)
+    public function log($connection, $queue, $payload, $exception)
     {
         $path = "$this->path/$connection/$queue";
 
         $this->makePath($path);
 
-        $filename = $this->getNewId().'_'.date('YmdHis');
+        $id = $this->getNewId();
+
+        $filename = $id.'_'.date('YmdHis');
 
         file_put_contents("$path/$filename", $payload);
+
+        return $id;
     }
 
     /**
@@ -104,7 +106,7 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
      */
     private function getSequenceFilename()
     {
-        return "$this->path/$this->sequenseFile";
+        return "$this->path/$this->sequence";
     }
 
     /**

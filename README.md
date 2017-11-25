@@ -10,55 +10,67 @@ If you use job queues in your [Laravel](http://laravel.com) or [Lumen](http://lu
 but don't want to store failed jobs in the database, especially if you're not using a database 
 in the project itself (i.e. an API proxi) this file based failer is to rescue.
 
+## Contents
+
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Testing](#testing)
+- [Security](#security)
+- [Changelog](#changelog)
+- [Contributing](#contributing)
+- [Credits](#credits)
+- [License](#license)
+
 ## Installation
 
 ### Install through composer
 
-For Laravel 5.3+
+Laravel 5.3+
 
 ```bash
 $ composer require pmatseykanets/file-queue-failer
 ```
 
-For Laravel < 5.3
+If you're using Laravel < 5.5 or if you have package auto-discovery turned off you have to manually register the service provider:
+
+```php
+// config/app.php
+'providers' => [
+    /*
+     * Package Service Providers...
+     */
+    Pvm\FileQueueFailer\Queue\QueueServiceProvider::class,
+],
+```
+
+Laravel 5.0 to 5.2
 
 ```bash
 $ composer require pmatseykanets/file-queue-failer:0.1.0
 ```
 
-
-### Register the service provider
-
-Open `config\app.php` in the editor of your choice and swap the `QueueServiceProvider` implementation 
+Substitute original `QueueServiceProvider` implementation in `config\app.php`  
 
 ```php
-    'providers' => [
-        ...
-        Illuminate\Queue\QueueServiceProvider::class,
-        ...
-    ];
+// config/app.php
+'providers' => [
+    // Illuminate\Queue\QueueServiceProvider::class,
+    Pvm\FileQueueFailer\Queue\QueueServiceProvider::class,
+];
 ```
 
-with
-
-```php
-    'providers' => [
-        ...
-        Pvm\FileQueueFailer\Queue\QueueServiceProvider::class,
-        ...
-    ];
-```
-
-### Set the path for the directory that will hold failed jobs
+## Configuration
 
 By default failed jobs will be stored in `storage\failed_jobs` directory.
 
 You can change the location by changing the `path` property in `failed` section of `config\queue.php` config file.
 
 ```php
-    'failed' => [
-        'path' => '/some/other/path',
-    ],
+// config\queue.php
+'failed' => [
+    'path' => '/some/other/path',
+],
 ```
 
 ## Usage
@@ -73,7 +85,29 @@ You can use all artisan `queue` commands as usual to manage failed jobs
   queue:retry         Retry a failed queue job
 ```
 
+## Testing
 
-### License
+``` bash
+$ ./vendor/bin/phpunit
+```
 
-The artisan-io is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+## Security
+
+If you discover any security related issues, please email pmatseykanets@gmail.com instead of using the issue tracker.
+
+## Changelog
+
+Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
+
+## Contributing
+
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+
+## Credits
+
+- [Peter Matseykanets](https://github.com/pmatseykanets)
+- [All Contributors](../../contributors)
+
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.

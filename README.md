@@ -14,9 +14,18 @@ in the project itself (i.e. an API proxi) this file based failer is to rescue.
 
 ### Install through composer
 
+For Laravel 5.3+
+
 ```bash
 $ composer require pmatseykanets/file-queue-failer
 ```
+
+For Laravel < 5.3
+
+```bash
+$ composer require pmatseykanets/file-queue-failer:0.1.0
+```
+
 
 ### Register the service provider
 

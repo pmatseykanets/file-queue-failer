@@ -1,12 +1,14 @@
 # File based implementation of Laravel Queue Failer
 
-[![Laravel 5.1](https://img.shields.io/badge/Laravel-5.1-orange.svg)](http://laravel.com)
+[![Laravel 5.X](https://img.shields.io/badge/Laravel-5.X-orange.svg)](http://laravel.com)
 [![StyleCI](https://styleci.io/repos/40268759/shield)](https://styleci.io/repos/40268759)
 [![Build Status](https://travis-ci.org/pmatseykanets/file-queue-failer.svg)](https://travis-ci.org/pmatseykanets/file-queue-failer)
 [![Latest Stable Version](https://poser.pugx.org/pmatseykanets/file-queue-failer/v/stable)](https://packagist.org/packages/pmatseykanets/file-queue-failer)
 [![License](https://poser.pugx.org/pmatseykanets/file-queue-failer/license)](https://packagist.org/packages/pmatseykanets/file-queue-failer)
 
-If you use job queues in your [Laravel](http://laravel.com) or [Lumen](http://lumen.laravel.com) project but don't want to store failed jobs in the database, especially if you're not using the database in the project itself (i.e. an API proxi) this file based failer to rescue.
+If you use job queues in your [Laravel](http://laravel.com) or [Lumen](http://lumen.laravel.com) project 
+but don't want to store failed jobs in the database, especially if you're not using a database 
+in the project itself (i.e. an API proxi) this file based failer is to rescue.
 
 ## Installation
 
@@ -42,17 +44,17 @@ with
 
 By default failed jobs will be stored in `storage\failed_jobs` directory.
 
-You can change that by setting `path` property in `failed` section of `config\queue.php` config file.
+You can change the location by changing the `path` property in `failed` section of `config\queue.php` config file.
 
 ```php
     'failed' => [
-        'path' => 'storage/custom_path',
+        'path' => '/some/other/path',
     ],
 ```
 
 ## Usage
 
-You can use all artisan commands to manage failed jobs
+You can use all artisan `queue` commands as usual to manage failed jobs
 
 ```bash
  queue

@@ -57,7 +57,7 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
      *
      * @param mixed $id
      *
-     * @return array
+     * @return object|null
      */
     public function find($id)
     {
@@ -140,7 +140,7 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
 
         $this->traverseStorage(function ($job, $connection, $queue) use (&$all) {
             $job = $this->getJobFromFile($job, $connection, $queue);
-            $all[$job['id']] = $job;
+            $all[$job->id] = $job;
 
             return true;
         });
@@ -221,13 +221,13 @@ class FilesystemFailedJobProvider implements FailedJobProviderInterface
      * @param $connection
      * @param $queue
      *
-     * @return array
+     * @return object
      */
     protected function getJobFromFile($filename, $connection, $queue)
     {
         list($id, $ts) = explode('_', basename($filename));
 
-        return [
+        return (object) [
             'id'         => (int) $id,
             'connection' => basename($connection),
             'queue'      => basename($queue),

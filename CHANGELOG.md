@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [1.1.0](https://github.com/pmatseykanets/file-queue-failer/releases/tag/v1.1.0) - 2017-11-29
+
+### Fixed
+
+- Return a job as an object rather than array
+
 ## [1.0.0](https://github.com/pmatseykanets/file-queue-failer/releases/tag/v1.0.0) - 2017-11-25
 
 ### Added

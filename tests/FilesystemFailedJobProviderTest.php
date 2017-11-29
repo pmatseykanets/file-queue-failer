@@ -35,14 +35,15 @@ class FilesystemFailedJobProviderTest extends TestCase
         $provider = $this->getProvider();
 
         $timeStamp = date('YmdHis');
-        $provider->log('foo', 'bar', json_encode(['job' => 'baz', 'data' => ['data']]), new \Exception('Foo'));
+        $provider->log('foo', 'bar', 'baz', new \Exception('Foo'));
 
         $this->assertStringEqualsFile("$this->path/failed.seq", '1');
 
-        $file = "$this->path/foo/bar/1_$timeStamp";
-        $this->assertFileExists($file);
+        $filePath = "$this->path/foo/bar/1_$timeStamp";
+        $this->assertFileExists($filePath);
+        $this->assertStringEqualsFile($filePath, 'baz');
 
-        @unlink($file);
+        @unlink($filePath);
         @rmdir("$this->path/foo/bar");
         @rmdir("$this->path/foo");
     }
@@ -68,7 +69,7 @@ class FilesystemFailedJobProviderTest extends TestCase
         $provider = $this->getProvider();
         $one = $provider->find(2);
 
-        $this->assertTrue(is_array($one));
+        $this->assertTrue(is_object($one));
         $this->assertEquals($jobs[1], $one);
 
         $this->cleanStorage($jobs);
@@ -105,9 +106,9 @@ class FilesystemFailedJobProviderTest extends TestCase
     {
         $jobs = $this->populateStorage();
 
-        $file = $this->buildFilePathFromJob($jobs[0]).'ext';
-        $file = dirname($file).'/prefix'.basename($file).'ext';
-        file_put_contents($file, 'data');
+        $filePath = $this->buildFilePathFromJob($jobs[0]).'ext';
+        $filePath = dirname($filePath).'/prefix'.basename($filePath).'ext';
+        file_put_contents($filePath, 'data');
 
         $provider = $this->getProvider();
         $all = $provider->all();
@@ -115,7 +116,7 @@ class FilesystemFailedJobProviderTest extends TestCase
         $this->assertCount(2, $all);
         $this->assertEquals($jobs, $all);
 
-        @unlink($file);
+        @unlink($filePath);
         $this->cleanStorage($jobs);
     }
 
@@ -131,14 +132,14 @@ class FilesystemFailedJobProviderTest extends TestCase
     private function populateStorage()
     {
         $jobs = [
-            [
+            (object) [
                 'id'         => 1,
                 'connection' => 'foo',
                 'queue'      => 'bar',
                 'payload'    => json_encode(['job' => 'job1', 'data' => ['data1']]),
                 'failed_at'  => '2015-08-01 12:30:00',
             ],
-            [
+            (object) [
                 'id'         => 2,
                 'connection' => 'baz',
                 'queue'      => 'qux',
@@ -163,30 +164,29 @@ class FilesystemFailedJobProviderTest extends TestCase
         }
 
         foreach ($jobs as $job) {
-            @rmdir("$this->path/{$job['connection']}/{$job['queue']}");
-            @rmdir("$this->path/{$job['connection']}");
+            @rmdir("$this->path/$job->connection/$job->queue");
+            @rmdir("$this->path/$job->connection");
         }
     }
 
     private function buildFilePathFromJob($job)
     {
-        $path = "$this->path/{$job['connection']}/{$job['queue']}";
-        $basename = $job['id'].'_'.\DateTime::createFromFormat('Y-m-d H:i:s', $job['failed_at'])->format('YmdHis');
+        $path = "$this->path/$job->connection/$job->queue";
+        $basename = $job->id.'_'.\DateTime::createFromFormat('Y-m-d H:i:s', $job->failed_at)->format('YmdHis');
 
         return "$path/$basename";
     }
 
     private function createJob($job)
     {
-        $file = $this->buildFilePathFromJob($job);
-        @mkdir(dirname($file), 0777, true);
-        file_put_contents($file, $job['payload']);
+        $filePath = $this->buildFilePathFromJob($job);
+        @mkdir(dirname($filePath), 0777, true);
+        file_put_contents($filePath, $job->payload);
     }
 
     private function removeJob($job)
     {
-        $file = $this->buildFilePathFromJob($job);
-        @unlink($file);
+        @unlink($this->buildFilePathFromJob($job));
     }
 
     private function createStorage()

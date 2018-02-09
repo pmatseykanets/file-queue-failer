@@ -26,10 +26,16 @@ in the project itself (i.e. an API proxi) this file based failer is to rescue.
 
 ### Install through composer
 
-Laravel 5.3+
+**Laravel 5.6**
 
 ```bash
 $ composer require pmatseykanets/file-queue-failer
+```
+
+**Laravel 5.3 - 5.5**
+
+```bash
+$ composer require pmatseykanets/file-queue-failer:1.1.0
 ```
 
 If you're using Laravel < 5.5 or if you have package auto-discovery turned off you have to manually register the service provider:
@@ -44,7 +50,7 @@ If you're using Laravel < 5.5 or if you have package auto-discovery turned off y
 ],
 ```
 
-Laravel 5.0 - 5.2
+**Laravel 5.0 - 5.2**
 
 ```bash
 $ composer require pmatseykanets/file-queue-failer:0.1.0

@@ -1,6 +1,11 @@
 # Changelog
 
-## [Unreleased]
+## [2.0.0](https://github.com/pmatseykanets/file-queue-failer/releases/tag/v2.0.0) - 2018-02-09
+
+### Changed
+
+- Laravel 5.6 compatibility
+- Switched to PHPUnit 7
 
 ## [1.1.0](https://github.com/pmatseykanets/file-queue-failer/releases/tag/v1.1.0) - 2017-11-29
 

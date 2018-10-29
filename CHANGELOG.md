@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.1.0](https://github.com/pmatseykanets/file-queue-failer/releases/tag/v2.1.0) - 2018-02-09
+
+### Changed
+
+- Changed constraints for laravel packages to allow future versions
+
 ## [2.0.0](https://github.com/pmatseykanets/file-queue-failer/releases/tag/v2.0.0) - 2018-02-09
 
 ### Changed
